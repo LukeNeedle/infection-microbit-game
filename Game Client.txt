@@ -1,5 +1,5 @@
 #INFO#
-#V1.5U
+#V1.0.0 Game Client
 
 # Imports go at the top
 from microbit import *

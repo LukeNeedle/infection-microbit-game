@@ -1,5 +1,5 @@
 #INFO#
-#V1.5M
+#V1.0.0 Game Host
 
 # Imports go at the top
 from microbit import *
