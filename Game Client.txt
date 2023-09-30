@@ -1,0 +1,78 @@
+#INFO#
+#V1.5U
+
+# Imports go at the top
+from microbit import *
+import radio
+
+#Group 245 - Setup
+#Group 246 - Game
+#Group 247 - Finish
+
+difficulty = -1 # 2 is easiest, 0 is hardest, -1 is disabled
+
+#Stetup Script
+radio.config(group=245)
+display.scroll("Searching", wait=False)
+while True:
+    #Negotiate difficulty
+    value = radio.receive()
+    if value == "246":
+        break
+    elif value:
+        if difficulty == -1:
+            display.scroll("Ready", wait=False)
+        difficulty = int(value)
+    del value
+
+Life = 5
+LifeMult = 0.33 # Lower is higher difficulty
+infected = False
+
+display.scroll("3")
+display.scroll("2")
+display.scroll("1")
+display.scroll("GO!")
+
+radio.config(group=246, power=difficulty)
+del difficulty
+
+def infectedStatus(infected, Life):
+    if infected:
+        display.show(Image.SAD)
+        radio.send("INFECT")
+    else:
+        for i in range(0, 5):
+            if(Life-i >= 1):
+                for i2 in range(5):
+                    display.set_pixel(i,i2,9)
+            elif(Life-i > 0):
+                for i2 in range(5):
+                    display.set_pixel(i,i2,round((Life-i)*9))
+
+
+def receiveLogic(input, inputStrength, infected, Life):
+    if(not infected):
+        if(input == b'\x01\x00\x01INFECT'):
+            print("Running infected calculation")
+            print(inputStrength)
+            Life -= (1- LifeMult*inputStrength)*1/1000
+            print(Life)
+            if(Life <= 0):
+                infected = True
+    return [infected, Life]
+   
+
+# Code in a 'while True:' loop repeats forever
+while True:
+    message = radio.receive_full()
+    if(message):
+        if message[0] == b'\x01\x00\x01245':
+            radio.config(group=245)
+            reset()
+        print(str(message[0]))
+        out = receiveLogic(message[0], message[1], infected, Life)
+        infected = out[0]
+        Life = out[1]
+    infectedStatus(infected, Life)
+    sleep(10)

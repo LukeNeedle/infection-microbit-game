@@ -1,0 +1,67 @@
+#INFO#
+#V1.5M
+
+# Imports go at the top
+from microbit import *
+import radio
+
+#Group 245 - Setup
+#Group 246 - Game
+#Group 247 - Finish
+
+difficulty = 0 # 2 is easiest, 0 is hardest
+display.show(0)
+while True: # Set difficulty
+    if (button_a.is_pressed() and not button_b.is_pressed()):
+        if difficulty == 0:
+            difficulty = 2
+        else:
+            difficulty -= 1
+        display.show(difficulty)
+        sleep(100)
+    if (not button_a.is_pressed() and button_b.is_pressed()):
+        if difficulty == 2:
+            difficulty = 0
+        else:
+            difficulty += 1
+        display.show(difficulty)
+        sleep(100)
+    if accelerometer.was_gesture('shake'):
+        break
+
+sleep(1000)
+
+#Stetup Script
+radio.config(group=245, power=7)
+display.scroll("Sending", wait=False)
+while True:
+    #Negotiate difficulty
+    radio.send(str(difficulty))
+    if accelerometer.was_gesture('shake'):
+        radio.send("246")
+        sleep(100)
+        break
+
+for counter in range (60,0, -1):
+    display.scroll(counter, delay=100)
+
+radio.config(group=246, power=difficulty)
+
+del difficulty
+
+display.show(Image.SAD)
+while True:
+    radio.send("INFECT")
+    sleep(100)
+    if (button_a.is_pressed() and button_b.is_pressed()):
+        break
+
+sleep(1000)
+radio.config(group=246, power=7)
+display.scroll('Ending')
+while True:
+    radio.send("245")
+    sleep(100)
+    if accelerometer.was_gesture('shake'):
+        break
+reset()
