@@ -32,3 +32,9 @@ When a player reaches zero health they become Infected, this means that they sta
 ## Ending
 
 Once everyone has become infected, the Game Host should press both A and B at the same time to end the game, once everyone’s display has said “Searching” again the Game Host should shake the device to go back to the difficulty menu.
+
+## How to flash a BBC Micro:Bit
+
+![How to flash a BBC Micro:Bit](https://python.microbit.org/v/3/static/media/transfer-hex-win.e71df84067fad7538488.gif)
+
+https://python.microbit.org/v/3/static/media/transfer-hex-win.e71df84067fad7538488.gif
