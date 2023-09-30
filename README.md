@@ -1,4 +1,4 @@
-# infection-microbit-game
+# Infection game
 A multiplayer game played with the BBC Micro:Bit
 
 This game is based off the game team tag.
